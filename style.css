@@ -1,0 +1,177 @@
+/* RESET AND BASE STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #000000;
+    --secondary-color: #FFFFFF;
+    --accent-color: #00FFC2;
+    --font-family-base: 'Montserrat', sans-serif;
+    --section-count: 4; /* Total number of sections */
+    --rotation-angle: 90deg; /* 360deg / 4 sections */
+    --transition-speed: 1.5s; /* Luxurious and slow transition */
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Essential for 3D single-page structure */
+    background-color: var(--primary-color);
+    font-family: var(--font-family-base);
+    color: var(--secondary-color);
+}
+
+/* ------------------------------------------- */
+/* 3D SCENE SETUP */
+/* ------------------------------------------- */
+
+#scene {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Create the 3D viewing space */
+    perspective: 1000px; 
+}
+
+#portal {
+    width: 100%;
+    height: 100%;
+    /* Allow children to be positioned in 3D space */
+    transform-style: preserve-3d;
+    /* This transition is controlled by JavaScript to create the rotation */
+    transition: transform var(--transition-speed) cubic-bezier(0.8, 0.0, 0.2, 1.0); 
+}
+
+/* ------------------------------------------- */
+/* SECTION STYLING & POSITIONING (RESPONSIVE) */
+/* ------------------------------------------- */
+
+.section {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5vh 5vw; /* Responsive padding */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5) inset;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--primary-color); /* Fallback */
+    /* Overlay for text legibility */
+    backdrop-filter: brightness(0.7);
+}
+
+/* Calculate the distance needed to rotate the face outward (apothem of a square) */
+/* R = (width / 2) / tan(180deg / sides)  -> For 4 sides: R = width / 2 */
+.section {
+    transform: rotateY(0deg) translateZ(50vw); 
+}
+
+/* Positioning the 4 faces in 3D space */
+.front { transform: rotateY(0deg) translateZ(50vw); background-color: rgba(0, 0, 0, 0.9); }
+.right { 
+    background-image: url('https://picsum.photos/1920/1080?random=1'); /* Placeholder Women's Wear */
+    transform: rotateY(90deg) translateZ(50vw); 
+}
+.back { 
+    background-image: url('https://picsum.photos/1920/1080?random=2'); /* Placeholder Men's Wear */
+    transform: rotateY(180deg) translateZ(50vw); 
+}
+.left { 
+    transform: rotateY(270deg) translateZ(50vw);
+    background-image: url('https://picsum.photos/1920/1080?random=3'); /* Placeholder Abstract Look */
+}
+
+/* TEXT ANIMATIONS & STYLES (More refined) */
+
+.logo-text {
+    font-size: 8vw;
+    font-weight: 100;
+    letter-spacing: 2vw;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInFade 1.5s ease-out forwards;
+}
+
+.tagline {
+    font-size: 2.5vw;
+    font-weight: 400;
+    color: var(--accent-color);
+    animation: slideInFade 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes slideInFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Overlay text styles for sections with images */
+.background-image-text {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5vw;
+    max-width: 80vw;
+    border: 1px solid var(--accent-color);
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+/* We'll use JS to reveal this text only when the section is centered */
+#portal[data-current-index="1"] #s2 .background-image-text,
+#portal[data-current-index="2"] #s3 .background-image-text,
+#portal[data-current-index="3"] #s4 .background-image-text {
+    opacity: 1;
+}
+
+.quote {
+    font-size: clamp(1.5rem, 3.5vw, 3rem); /* Responsive font size */
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 2vh;
+    text-shadow: 0 0 15px var(--accent-color);
+}
+
+.author {
+    font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Launch Glitch Effect (using the HTML text as content) */
+.final-message {
+    font-size: 5vw;
+    font-weight: 700;
+    letter-spacing: 0.5vw;
+    position: relative;
+    display: inline-block;
+    color: var(--accent-color);
+    animation: glitch 6s infinite linear alternate-reverse;
+}
+
+/* Scroll Indicator (Refined for mobile/desktop hint) */
+.scroll-indicator {
+    position: absolute;
+    bottom: 5vh;
+    opacity: 0.7;
+    font-size: 0.8rem;
+    letter-spacing: 0.2rem;
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+/* Placeholder Images - Replace these URLs with actual fashion photos */
+#s2 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/1920/1080?random=1'); }
+#s3 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://picsum.photos/1920/1080?random=2'); }
+/* You can delete the above two lines and manually paste images here once you have them. */
